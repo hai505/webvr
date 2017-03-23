@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>gallaxy</title>
     <meta name="description" content="360&deg; Image - A-Frame">
-    <script src="../dist/aframe-master.min.js"></script>
+    <script src="../dist/aframe-master.min.js"></script>  
   <body>
     <a-scene>
 
@@ -24,7 +24,7 @@
       <!-- 太阳 -->
       
       <a-entity>
-      <a-sphere  action-sun  material="shader:flat;"  rotation-rate="1" radius="1" src="#sunface" position="0 0 -5" scale="1 1 1">
+      <a-sphere  action-sun  material="shader:flat;"  rotation-rate="1" radius="1" src="#sunface" position="0 0 0" scale="1 1 1">
         <a-animation attribute="rotation" dur="10000"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
           ></a-animation>
       </a-sphere>
@@ -36,32 +36,29 @@
 
 
         <!-- 水星 -->
-        <a-sphere  action-star revolution-day="87" radius="1" src="#mercuryface" position="-2 0 -5" scale=".4 .4 .4">
+        <a-sphere  action-star revolution-day="87" radius="1" src="#mercuryface" position="-2 0 0" scale=".4 .4 .4">
           <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
             ></a-animation>
         </a-sphere>
-        <a-torus material="opacity:.2;color:white"  arc="360" radius="2.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="2.1" radius-tubular="0.005" position="0 0 0"></a-torus>
 
 
 
         <!-- 金星 -->
-        <a-sphere action-star revolution-day="224" radius="1" src="#venusface" position="-5 0 -5" scale=".6 .6 .6">
+        <a-sphere action-star revolution-day="224" radius="1" src="#venusface" position="-5 0 0" scale=".6 .6 .6">
           <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0  0 360" repeat="indefinite" 
             ></a-animation>
         </a-sphere>
-        <a-torus material="opacity:.2;color:white"  arc="360" radius="5.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="5.1" radius-tubular="0.005" position="0 0 0"></a-torus>
 
 
         <!-- 地球 -->
-        <a-sphere action-star radius="1" revolution-day="365" src="#earthface" position="-9 0 -5" scale=".6 .6 .6">
+        <a-sphere action-star radius="1" revolution-day="365" src="#earthface" position="-9 0 0" scale=".6 .6 .6">
           <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0  360" repeat="indefinite" 
             ></a-animation>
         </a-sphere>
-        <a-torus material="opacity:.2;color:white"  arc="360" radius="9.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="9.1" radius-tubular="0.005" position="0 0 0"></a-torus>
 
-
-<!--         <a-animation attribute="position"  to="10 2 -5" easing="linear"  repeat="indefinite" 
-            ></a-animation> -->
 
       <!-- 火星 -->
 
@@ -76,47 +73,17 @@
       <!-- 流星 -->
 
 
-<!--      <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
-        ></a-animation> -->
-
-
-      <!-- 公转 -->
     </a-entity>
 
-      
-<!--       <a-plane color="white" position="2 2 -8" height="5" width="5" rotation="-45 0 0"></a-plane>
- -->
 
-
-
-<!--       <a-plane position="1 0 10"></a-plane> -->
-     
-
-
-<!--        <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
- -->
 
       <a-sky color="#222"></a-sky>
 
-      <a-entity camera look-controls position="0 5 1"> <!-- 常驻摄像机 -->
-        <a-entity cursor="fuse: true; fuseTimeout: 2500"
-            position="0 0 -1"
-            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-            material="color: black; shader: flat">
-        </a-entity> 
-
-<!--         <a-entity  id="text_mission" style='visibility:visible;' position=".4 .5  -1" height="10" width="10" text="Mission Complete"></a-entity>  -->
-
- <!--        <a-sphere radius="1"   position="0 -100 -5" scale=".6 .6 6">
-          <a-animation attribute="position"  to="0 0 -50" easing="linear"  dur="500" repeat="50" 
-            ></a-animation>
-        </a-sphere>      -->   
-
-
+      <a-entity active camera look-controls position="1 1 3"> <!-- 常驻摄像机 -->
       </a-entity>
 
       <a-light type="ambient" color="#445451"></a-light>
-      <a-light type="point" distance="120" intensity="2" position="0 0 -5"></a-light>
+      <a-light type="point" distance="120" intensity="2" position="0 0 0"></a-light>
 
 
   
@@ -130,8 +97,10 @@
 AFRAME.registerComponent('action-star', {
   init: function () {
 
+
     var obj = this.el;
     var defaul_x = obj.components.position.data.x;
+    var defaul_z = obj.components.position.data.z;
     var revolution_day = parseInt(obj.getAttribute('revolution-day'));//公转周期 xx天
 
     var setPo=function(){
@@ -166,21 +135,25 @@ AFRAME.registerComponent('action-star', {
 
 
 
-      obj.setAttribute('position',x+' '+y+' -5')
+      obj.setAttribute('position',x+' '+y+' '+defaul_z)
 
       requestAnimationFrame(setPo)
 
     }
 
     setPo();
-
-
  
 
 
   }
 
 });
+
+  //设置相机朝向 默认原点
+  //document.querySelector('a-entity[camera]').components.camera.camera.lookAt(new THREE.Vector3(0,0,0))
+
+  //设置相机摆放
+  //document.querySelector('a-entity[camera]').setAttribute('position','0 0 5')
 
 
   </script>
