@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>a static goods</title>
+    <meta name="description" content="360&deg; Image - A-Frame">
+    <!--<script src="../dist/aframe-master.js"></script>-->
+    <script src="../dist/aframe-v0.5.0.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+
+      <a-entity id="opacity" position="6 0 -5"
+                text="color: white; align: center; value: Animating opacity; width: 1.5">
+      </a-entity>
+
+      <a-assets>
+        <img id="focus" src="focus.jpg" width="auto" height="auto">
+      </a-assets>
+      
+
+      <a-box color="red" position="-3 0 -5" rotation="0 45 45" cursor-listener data-level=3>
+        <a-entity text="value: Hello World;"></a-entity>
+      </a-box>
+
+      
+      <a-sphere radius="1"  color="yellow" position="0 0 -5"  cursor-listener data-level=5></a-sphere>
+
+      <a-sphere radius="1"  color="#ccc" position="3 0 -5"  cursor-listener data-level=9></a-sphere>
+
+      
+<!--       <a-plane color="white" position="2 2 -8" height="5" width="5" rotation="-45 0 0"></a-plane>
+ -->
+
+
+
+<!--       <a-plane position="1 0 10"></a-plane> -->
+     
+
+
+<!--        <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
+ -->
+
+      <a-sky color="#222"></a-sky>
+
+      <a-entity camera look-controls> <!-- 常驻摄像机 -->
+<!--          <a-sphere src="#focus" radius=".2"   position="0 0 -2"  material="color:white ; opacity: 0.2" ></a-sphere>
+            >
+        </a-entity> -->
+        <a-entity cursor="fuse: true; fuseTimeout: 2500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat">
+        </a-entity>        
+
+
+      </a-entity>
+
+
+
+<!--       <a-camera look-controls>
+        <a-cursor></a-cursor>
+      </a-camera> -->
+  
+    </a-scene>
+  </body>
+  <script>
+
+var targetnum = document.querySelectorAll("[cursor-listener]").length;
+AFRAME.registerComponent('cursor-listener', {
+  init: function () {
+    var COLORS = ['red', 'green', 'blue'];
+    var obj = this.el;
+    var level = obj.getAttribute('data-level');
+    var timer  = null;
+    var n = level;
+
+    function  opca(evt) {
+
+      if(timer)clearInterval(timer);
+     
+      timer = setInterval(function(){
+          --n;
+
+          var randomIndex = Math.floor(Math.random() * COLORS.length);
+          var opacity = 1/level * n;
+          obj.setAttribute('material', 'opacity', opacity);
+
+          console.log('HP='+n)
+
+          if(--n<=0){
+            clearInterval(timer);
+            obj.removeEventListener('fusing',opca);
+            --targetnum;
+            console.log('dead')
+            if(targetnum<=0){
+               setTimeout(function(){
+                  alert('Mission Complete')
+              },200)
+              
+            }
+          }
+
+          
+      },200);
+
+
+      console.log('fusing')
+    }
+
+ 
+
+    obj.addEventListener('fusing', opca);
+    obj.addEventListener('mouseleave', function(){
+      if(timer)clearInterval(timer);
+      console.log('mouseleave');
+    });
+
+
+  }
+
+});
+
+
+  </script>
+</html>

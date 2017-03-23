@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>gallaxy</title>
+    <meta name="description" content="360&deg; Image - A-Frame">
+    <script src="../dist/aframe-master.js"></script>
+  <body>
+    <a-scene>
+
+      <a-assets>
+        <img id="sunface" src="sun.png" >
+        <img id="mercuryface" src="mercury.png" >
+        <img id="venusface" src="venus.png" >
+        <img id="earthface" src="earth.png" >
+        <img id="moonface" src="moon.png" >
+        <img id="marsface" src="mars.png" >
+        <img id="sunring" src="sunring2.png" >
+      </a-assets>
+
+
+      <!-- 自转 -->
+
+      <!-- 太阳 -->
+      
+      <a-entity>
+      <a-sphere  action-sun  material="shader:flat;"  rotation-rate="1" radius="1" src="#sunface" position="0 0 -5" scale="1 1 1">
+        <a-animation attribute="rotation" dur="10000"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
+          ></a-animation>
+      </a-sphere>
+      <a-entity text="value: Hello World;" position="-4 -3 -8"></a-entity>
+
+<!--       <a-torus src="#sunring" material="shader:flat;opacity:.5;"   arc="360" radius="1" radius-tubular="0.08" position="0 0 -5"></a-torus> -->
+
+      <!-- 公转 -->
+
+
+        <!-- 水星 -->
+        <a-sphere  action-star revolution-day="87" radius="1" src="#mercuryface" position="-2 0 -5" scale=".4 .4 .4">
+          <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
+            ></a-animation>
+        </a-sphere>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="2.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+
+
+
+        <!-- 金星 -->
+        <a-sphere action-star revolution-day="224" radius="1" src="#venusface" position="-5 0 -5" scale=".6 .6 .6">
+          <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0  0 360" repeat="indefinite" 
+            ></a-animation>
+        </a-sphere>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="5.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+
+
+        <!-- 地球 -->
+        <a-sphere action-star radius="1" revolution-day="365" src="#earthface" position="-9 0 -5" scale=".6 .6 .6">
+          <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0  360" repeat="indefinite" 
+            ></a-animation>
+        </a-sphere>
+        <a-torus material="opacity:.2;color:white"  arc="360" radius="9.1" radius-tubular="0.005" position="0 0 -5"></a-torus>
+
+
+<!--         <a-animation attribute="position"  to="10 2 -5" easing="linear"  repeat="indefinite" 
+            ></a-animation> -->
+
+      <!-- 火星 -->
+
+      <!-- 木星 -->
+
+      <!-- 土星 -->
+
+      <!-- 天王星 -->
+
+      <!-- 海王星 -->
+
+      <!-- 流星 -->
+
+
+<!--      <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 0 360" repeat="indefinite" 
+        ></a-animation> -->
+
+
+      <!-- 公转 -->
+    </a-entity>
+
+      
+<!--       <a-plane color="white" position="2 2 -8" height="5" width="5" rotation="-45 0 0"></a-plane>
+ -->
+
+
+
+<!--       <a-plane position="1 0 10"></a-plane> -->
+     
+
+
+<!--        <a-box color="red" position="0 2 -5" rotation="0 45 45" scale="2 2 2"></a-box>
+ -->
+
+      <a-sky color="#222"></a-sky>
+
+      <a-entity camera look-controls position="0 5 1"> <!-- 常驻摄像机 -->
+        <a-entity cursor="fuse: true; fuseTimeout: 2500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat">
+        </a-entity> 
+
+<!--         <a-entity  id="text_mission" style='visibility:visible;' position=".4 .5  -1" height="10" width="10" text="Mission Complete"></a-entity>  -->
+
+ <!--        <a-sphere radius="1"   position="0 -100 -5" scale=".6 .6 6">
+          <a-animation attribute="position"  to="0 0 -50" easing="linear"  dur="500" repeat="50" 
+            ></a-animation>
+        </a-sphere>      -->   
+
+
+      </a-entity>
+
+      <a-light type="ambient" color="#445451"></a-light>
+      <a-light type="point" distance="120" intensity="2" position="0 0 -5"></a-light>
+
+
+  
+    </a-scene>
+  </body>
+  <script>
+
+  var sun = document.querySelector("[action-sun]");
+
+
+AFRAME.registerComponent('action-star', {
+  init: function () {
+
+    var obj = this.el;
+    var defaul_x = obj.components.position.data.x;
+    var revolution_day = parseInt(obj.getAttribute('revolution-day'));//公转周期 xx天
+
+    var setPo=function(){
+
+
+    AFRAME.scenes[0].time//初始化完成当前时间
+
+      var speed = 87*0.03/revolution_day;//以水星公转周期87天为单位1
+      //公转速度
+      var angle = AFRAME.scenes[0].time*speed%360;
+      var hudu =  2*Math.PI/360*angle;
+
+
+      var radius = Math.abs(defaul_x-sun.components.position.data.x);//半径
+
+      //x 变负 0-90 270-360
+      if((angle>=0 && angle<=90) || (angle>=270 && angle<=360)){
+        var x = -Math.abs(Math.cos(hudu)*radius);
+      }else{
+        var x = Math.abs(Math.cos(hudu)*radius);
+
+      }
+      //y 变负 180-360
+      if(angle>=180 && angle<=360){
+        var y = -Math.abs(Math.sin(hudu)*radius);
+      }else{
+        var y = Math.abs(Math.sin(hudu)*radius);
+
+      }    
+
+      //console.log(x+'='+y);
+
+
+
+      obj.setAttribute('position',x+' '+y+' -5')
+
+      requestAnimationFrame(setPo)
+
+    }
+
+    setPo();
+
+
+ 
+
+
+  }
+
+});
+
+
+  </script>
+</html>

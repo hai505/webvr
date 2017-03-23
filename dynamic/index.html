@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>a static goods</title>
+    <meta name="description" content="360&deg; Image - A-Frame">
+    <script src="../dist/aframe-master.js"></script>
+  <body>
+    <a-scene>
+
+      <a-assets>
+        <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
+        <img id="ballface" src="moon.png" >
+        <img id="movingballface" src="mars.png" >
+      </a-assets>
+
+      
+
+      <a-box  src="moon.png"  position="-3 0 -5" rotation="0 45 45" cursor-listener data-level=3>
+      </a-box>
+
+      
+      <a-sphere radius="1"  color="yellow" position="0 0 -5"  cursor-listener data-level=5></a-sphere>
+
+      <a-sphere  radius="1"  color="#ccc" position="3 0 -5"  cursor-listener data-level=9></a-sphere>
+
+      <!-- 往返运动 -->
+      <a-box src="#boxTexture" position="-10 2 -5" rotation="0 45 45" scale="2 2 2">
+        <a-animation attribute="position" to="10 2 -5" direction="alternate" dur="2000"
+          repeat="indefinite"></a-animation>
+      </a-box>
+
+      <!-- 自转 -->
+
+      <a-sphere radius="1" src="#movingballface" position="-4 -3 -8" scale="1 1 1">
+        <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 360 0" repeat="indefinite" 
+          ></a-animation>
+      </a-sphere>
+      <a-ring material="opacity:.3;color:red" radius-inner="1.1"   radius-outer="1.3" rotation="0 0 0" position="-4 -3 -8"></a-ring>
+
+      <!-- 流星 -->
+      <a-sphere radius="1" src="#movingballface" position="-4 -3 -8" scale="1 1 1">
+        <a-animation attribute="rotation"  easing="linear" fill ＝"forwards" from="0 0 0" to="0 360 0" repeat="indefinite" 
+          ></a-animation>
+      </a-sphere>
+
+
+<a-entity text="value: Hello World;" position="-4 -3 -8"></a-entity>
+
+      <a-sky color="#222"></a-sky>
+
+      <a-entity camera look-controls> <!-- 常驻摄像机 -->
+        <a-entity cursor="fuse: true; fuseTimeout: 2500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat">
+        </a-entity> 
+
+
+       <a-sphere action-shot radius="1"  visible="false"  position="0 -100 -5" scale=".6 .6 6">
+          <a-animation attribute="position"  to="0 0 -50" easing="linear"  dur="500" repeat="50" 
+            ></a-animation>
+        </a-sphere>     
+
+      </a-entity>
+
+      <a-light type="ambient" color="#445451"></a-light>
+      <a-light type="point" intensity="2" position="2 4 4"></a-light>
+
+
+
+<!--       <a-camera look-controls>
+        <a-cursor></a-cursor>
+      </a-camera> -->
+  
+    </a-scene>
+  </body>
+  <script>
+
+var targetnum = document.querySelectorAll("[cursor-listener]").length;
+var action_shot = document.querySelector("[action-shot]");
+AFRAME.registerComponent('cursor-listener', {
+  init: function () {
+    var COLORS = ['red', 'green', 'blue'];
+    var obj = this.el;
+    var level = obj.getAttribute('data-level');
+    var timer  = null;
+    var n = level;
+
+    function  opca(evt) {
+
+      if(timer)clearInterval(timer);
+     
+      timer = setInterval(function(){
+
+          action_shot.setAttribute('visible',true);
+
+          --n;
+
+          var randomIndex = Math.floor(Math.random() * COLORS.length);
+          var opacity = 1/level * n;
+          obj.setAttribute('material', 'opacity', opacity);
+
+          console.log('HP='+n)
+
+          if(--n<=0){
+            clearInterval(timer);
+            obj.removeEventListener('fusing',opca);
+            --targetnum;
+            action_shot.setAttribute('visible',false);
+            console.log('dead')
+            if(targetnum<=0){
+
+               setTimeout(function(){
+                document.querySelector('#text_mission').components.visible = true;
+                  //alert('Mission Complete')
+              },200)
+              
+            }
+          }
+
+          
+      },200);
+
+
+      console.log('fusing')
+    }
+
+ 
+
+    obj.addEventListener('fusing', opca);
+    obj.addEventListener('mouseleave', function(){
+      action_shot.setAttribute('visible',false);
+      if(timer)clearInterval(timer);
+      console.log('mouseleave');
+    });
+
+
+  }
+
+});
+
+
+  </script>
+</html>
