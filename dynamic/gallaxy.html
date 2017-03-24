@@ -106,12 +106,12 @@ AFRAME.registerComponent('action-star', {
     var setPo=function(){
 
 
-    AFRAME.scenes[0].time//初始化完成当前时间
+      AFRAME.scenes[0].time//初始化完成当前时间为0 单位毫秒 随着时间累加
 
-      var speed = 87*0.03/revolution_day;//以水星公转周期87天为单位1
+      var speed = 87*0.03/revolution_day;//以水星公转周期87天为单位1 0.03为调整系数
       //公转速度
       var angle = AFRAME.scenes[0].time*speed%360;
-      var hudu =  2*Math.PI/360*angle;
+      var hudu =  2*Math.PI/360*angle;//弧度   弧度＝2*PI/360*角度
 
 
       var radius = Math.abs(defaul_x-sun.components.position.data.x);//半径
